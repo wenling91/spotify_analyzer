@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 
 type Artist = {
   name: string;
@@ -208,16 +209,20 @@ export default function HomePage() {
 
 /* ---------- styles ---------- */
 
-const center = {
+const center: CSSProperties = {
   minHeight: "100vh",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
 };
 
-const page = { ...center, flexDirection: "column", padding: 32 };
+const page: CSSProperties = {
+  ...center,
+  flexDirection: "column",
+  padding: 32,
+};
 
-const spotifyButton = {
+const spotifyButton: CSSProperties = {
   backgroundColor: "#1ED760",
   color: "#fff",
   border: "none",
@@ -227,24 +232,24 @@ const spotifyButton = {
   cursor: "pointer",
 };
 
-const profileRow = {
+const profileRow: CSSProperties = {
   display: "flex",
   alignItems: "center",
   gap: 16,
   marginBottom: 28,
 };
 
-const avatar = { width: 88, height: 88, borderRadius: "50%" };
+const avatar: CSSProperties = { width: 88, height: 88, borderRadius: "50%" };
 
-const tabs = { display: "flex", gap: 12, marginBottom: 12 };
+const tabs: CSSProperties = { display: "flex", gap: 12, marginBottom: 12 };
 
-const topNWrap = {
+const topNWrap: CSSProperties = {
   display: "flex",
   gap: 12,
   marginBottom: 28,
 };
 
-const tabBtn = {
+const tabBtn: CSSProperties = {
   border: "none",
   borderRadius: 6,
   padding: "8px 14px",
@@ -253,7 +258,7 @@ const tabBtn = {
   transition: "all 0.25s ease",
 };
 
-const columnsAnimated = {
+const columnsAnimated: CSSProperties = {
   display: "grid",
   gridTemplateColumns: "repeat(3, 1fr)",
   gap: 24,
@@ -262,12 +267,12 @@ const columnsAnimated = {
   animation: "fadeIn 0.35s ease",
 };
 
-const column = {
+const column: CSSProperties = {
   borderLeft: "2px solid #f0f0f0",
   paddingLeft: 16,
 };
 
-const card = {
+const card: CSSProperties = {
   display: "flex",
   gap: 8,
   alignItems: "center",
@@ -280,12 +285,12 @@ const card = {
   transition: "transform 0.15s ease",
 };
 
-const rank = { width: 20, fontWeight: 600 };
-const thumb = { width: 48, height: 48, borderRadius: 6 };
-const sub = { fontSize: 12, color: "#666" };
+const rank: CSSProperties = { width: 20, fontWeight: 600 };
+const thumb: CSSProperties = { width: 48, height: 48, borderRadius: 6 };
+const sub: CSSProperties = { fontSize: 12, color: "#666" };
 
-const barWrap = { display: "flex", alignItems: "center", gap: 8 };
-const bar = {
+const barWrap: CSSProperties = { display: "flex", alignItems: "center", gap: 8 };
+const bar: CSSProperties = {
   height: 14,
   backgroundColor: "#1ED760",
   borderRadius: 4,
