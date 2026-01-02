@@ -91,7 +91,7 @@ export default function HomePage() {
           <p style={loginSubtitle}>Discover your music taste over time</p>
           <a href="/api/auth/login" style={{ textDecoration: "none" }}>
             <button style={spotifyButton}>
-              <span>Connect with Spotify</span>
+              <span>Login with Spotify</span>
             </button>
           </a>
         </div>
@@ -374,7 +374,7 @@ const logoCircle: CSSProperties = {
 };
 
 const loginTitle: CSSProperties = {
-  fontSize: 32,
+  fontSize: 30,
   fontWeight: 700,
   marginBottom: 12,
   color: "#191414",

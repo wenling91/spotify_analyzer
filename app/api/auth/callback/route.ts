@@ -34,11 +34,14 @@ export async function GET(request: Request) {
     return NextResponse.json(tokenData, { status: 500 });
   }
 
-  const response = NextResponse.redirect("http://127.0.0.1:3000");
+  const baseUrl = process.env.NEXTAUTH_URL || "http://127.0.0.1:3000";
+  const response = NextResponse.redirect(baseUrl);
 
+  // 根據環境自動判斷是否使用 secure
+  const isProduction = process.env.NODE_ENV === "production";
   response.cookies.set("spotify_access_token", tokenData.access_token, {
     httpOnly: true,
-    secure: false, // 本機開發必須是 false
+    secure: isProduction, // 本機開發必須是 false
     sameSite: "lax",
     maxAge: tokenData.expires_in,
   });
