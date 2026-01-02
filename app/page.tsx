@@ -34,32 +34,71 @@ export default function HomePage() {
     useState<"tracks" | "artists" | "genres">("tracks");
 
   const [topN, setTopN] = useState<number>(10);
+  const [error, setError] = useState<string | null>(null);
   const [animateKey, setAnimateKey] = useState(0);
 
   useEffect(() => {
     async function init() {
       try {
+        // Fetch profile first
         const profileRes = await fetch("/api/spotify/profile");
+        
         if (profileRes.status === 401) {
           setLoggedIn(false);
           return;
         }
 
+        if (!profileRes.ok) {
+          const errorData = await profileRes.json();
+          setError(errorData.error || "Failed to fetch profile");
+          setLoggedIn(false);
+          return;
+        }
+
         const profileData = await profileRes.json();
+        
+        if (profileData.error) {
+          setError(profileData.error);
+          setLoggedIn(false);
+          return;
+        }
+
         setProfile(profileData.profile);
 
-        setArtistsByTime(
-          await (await fetch("/api/spotify/top-artists-by-time")).json()
-        );
-        setGenresByTime(
-          await (await fetch("/api/spotify/top-genres-by-time")).json()
-        );
-        setTracksByTime(
-          await (await fetch("/api/spotify/top-tracks-by-time")).json()
-        );
+        // Fetch music data in parallel with error handling
+        const [artistsRes, genresRes, tracksRes] = await Promise.all([
+          fetch("/api/spotify/top-artists-by-time"),
+          fetch("/api/spotify/top-genres-by-time"),
+          fetch("/api/spotify/top-tracks-by-time"),
+        ]);
+
+        // Check for token expiration
+        if (artistsRes.status === 401 || genresRes.status === 401 || tracksRes.status === 401) {
+          setError("Your session has expired. Please login again.");
+          setLoggedIn(false);
+          return;
+        }
+
+        // Check for rate limiting
+        if (artistsRes.status === 429 || genresRes.status === 429 || tracksRes.status === 429) {
+          setError("Too many requests. Please try again in a few minutes.");
+        }
+
+        // Parse responses
+        const [artistsData, genresData, tracksData] = await Promise.all([
+          artistsRes.json(),
+          genresRes.json(),
+          tracksRes.json(),
+        ]);
+
+        setArtistsByTime(artistsData);
+        setGenresByTime(genresData);
+        setTracksByTime(tracksData);
 
         setLoggedIn(true);
-      } catch {
+      } catch (err) {
+        console.error("Init error:", err);
+        setError("Something went wrong. Please try again later.");
         setLoggedIn(false);
       }
     }
@@ -89,6 +128,13 @@ export default function HomePage() {
           </div>
           <h1 style={loginTitle}>Spotify Music Analyzer</h1>
           <p style={loginSubtitle}>Discover your music taste over time</p>
+          
+          {error && (
+            <div style={errorBox}>
+              <p style={{ margin: 0, fontSize: 14 }}>⚠️ {error}</p>
+            </div>
+          )}
+          
           <a href="/api/auth/login" style={{ textDecoration: "none" }}>
             <button style={spotifyButton}>
               <span>Login with Spotify</span>
@@ -118,9 +164,28 @@ export default function HomePage() {
               )}
               <div>
                 <h1 style={userName}>{profile.name}</h1>
-                <p style={userSubtitle}>Your Music Journey</p>
+                <p style={userSubtitle}>followers: {profile.followers}</p>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Error Message */}
+        {error && (
+          <div style={errorBanner}>
+            <span style={{ fontSize: 20 }}>⚠️</span>
+            <div>
+              <strong>Error</strong>
+              <p style={{ margin: "4px 0 0 0", fontSize: 14 }}>{error}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Loading Message for Data */}
+        {!artistsByTime && !genresByTime && !tracksByTime && !error && (
+          <div style={loadingBanner}>
+            <div style={smallSpinner} />
+            <span>Loading your music data...</span>
           </div>
         )}
 
@@ -665,4 +730,53 @@ const barLabel: CSSProperties = {
   color: "#1ED760",
   minWidth: 45,
   textAlign: "right",
+};
+
+const errorBox: CSSProperties = {
+  backgroundColor: "#FEE",
+  borderWidth: 1,
+  borderStyle: "solid",
+  borderColor: "#FCC",
+  borderRadius: 8,
+  padding: "12px 16px",
+  marginBottom: 20,
+  color: "#C33",
+};
+
+const errorBanner: CSSProperties = {
+  backgroundColor: "#FEF3F2",
+  borderWidth: 1,
+  borderStyle: "solid",
+  borderColor: "#FEE4E2",
+  borderRadius: 12,
+  padding: 16,
+  marginBottom: 24,
+  display: "flex",
+  gap: 12,
+  alignItems: "flex-start",
+  color: "#B42318",
+};
+
+const loadingBanner: CSSProperties = {
+  backgroundColor: "#F0F9FF",
+  borderWidth: 1,
+  borderStyle: "solid",
+  borderColor: "#E0F2FE",
+  borderRadius: 12,
+  padding: 16,
+  marginBottom: 24,
+  display: "flex",
+  gap: 12,
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#0369A1",
+};
+
+const smallSpinner: CSSProperties = {
+  width: 20,
+  height: 20,
+  border: "3px solid rgba(3, 105, 161, 0.3)",
+  borderTop: "3px solid #0369A1",
+  borderRadius: "50%",
+  animation: "spin 1s linear infinite",
 };
