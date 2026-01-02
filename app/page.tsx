@@ -239,9 +239,17 @@ const profileRow: CSSProperties = {
   marginBottom: 28,
 };
 
-const avatar: CSSProperties = { width: 88, height: 88, borderRadius: "50%" };
+const avatar: CSSProperties = { 
+  width: 88, 
+  height: 88, 
+  borderRadius: "50%", 
+};
 
-const tabs: CSSProperties = { display: "flex", gap: 12, marginBottom: 12 };
+const tabs: CSSProperties = { 
+  display: "flex", 
+  gap: 12, 
+  marginBottom: 12, 
+};
 
 const topNWrap: CSSProperties = {
   display: "flex",
@@ -285,11 +293,28 @@ const card: CSSProperties = {
   transition: "transform 0.15s ease",
 };
 
-const rank: CSSProperties = { width: 20, fontWeight: 600 };
-const thumb: CSSProperties = { width: 48, height: 48, borderRadius: 6 };
-const sub: CSSProperties = { fontSize: 12, color: "#666" };
+const rank: CSSProperties = { 
+  width: 20, 
+  fontWeight: 600, 
+};
 
-const barWrap: CSSProperties = { display: "flex", alignItems: "center", gap: 8 };
+const thumb: CSSProperties = { 
+  width: 48, 
+  height: 48, 
+  borderRadius: 6, 
+};
+
+const sub: CSSProperties = { 
+  fontSize: 12, 
+  color: "#666", 
+};
+
+const barWrap: CSSProperties = { 
+  display: "flex", 
+  alignItems: "center", 
+  gap: 8, 
+};
+
 const bar: CSSProperties = {
   height: 14,
   backgroundColor: "#1ED760",
