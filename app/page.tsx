@@ -164,7 +164,7 @@ export default function HomePage() {
               )}
               <div>
                 <h1 style={userName}>{profile.name}</h1>
-                <p style={userSubtitle}>followers: {profile.followers}</p>
+                <p style={userSubtitle}>{profile.name}'s music taste</p>
               </div>
             </div>
           </div>

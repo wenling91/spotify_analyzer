@@ -10,7 +10,9 @@ export async function GET() {
     scope: [
       "user-read-email",
       "user-top-read",
+      "user-read-private",
     ].join(" "),
+    show_dialog: "true",
   });
 
   return NextResponse.redirect(
